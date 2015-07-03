@@ -1,0 +1,5 @@
+name = Review Mover
+core = 7.x
+description = modulo per migrare le recensioni
+dependancies[] = comment
+description = A module to convert comment reviews in node reviews

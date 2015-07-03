@@ -1,0 +1,53 @@
+<?php
+
+/*Include the function that actually convert the comment review in a node review */
+module_load_include('inc', 'review_mover', 'review_mover');
+
+/*Form to insert the comment cid*/
+function review_mover_form($form, &$form_state) {
+	$form['comment_id'] = array(
+	'#title' => t('Comment ID'),
+	'#required' => TRUE,
+	'#type' => 'textfield',
+	'#description' => 'the ID of the comment to be converted',
+	);
+	$form['submit'] = array(
+	'#type' => 'submit',
+	'#value' => 'Move review!',
+	'#submit' => array('move_review'),
+	);
+	return $form;
+	}
+	
+/*Form review mover validation*/
+function review_mover_form_validate($form, &$form_state) {
+	if (!is_numeric($form_state['values']['comment_id'])) {
+	form_set_error('cid', t('The comment ID has to be numeric'));
+	}
+	}
+
+/*Form review mover submission*/
+function review_mover_form_submit($form, &$form_state) {
+		$form_state['rebuild'] = TRUE;
+	}
+	
+/*Implementation of hook permissions*/
+function review_mover_permission() {
+  return array(
+    'review_mover_permissions' => array(
+      'title' => t('Review mover'),
+      'description' => t('Permission to move reviews'),
+    ),
+  );
+}
+
+/*Implementation of hook_menu*/
+function review_mover_menu() {
+	$items['admin/review_mover'] = array(
+	'title' => t('Review mover'),
+	'page callback' => 'drupal_get_form',
+	'page arguments' => array('review_mover_form'),
+	'access arguments' => array('review_mover_permissions'),
+	);
+	return $items;
+	}
